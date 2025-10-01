@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Greeting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .name-input {
+            margin: 2rem 0;
+        }
+
+        input {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 300px;
+            text-align: center;
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        button {
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            color: white;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .emoji-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            animation: float 5s ease-in-out forwards;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .signature {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 100;
+        }
+
+        .message {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            input {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="greeting">Happy Birthday Friend!</h1>
+        
+        <div class="name-input">
+            <input type="text" id="nameInput" placeholder="Enter a name">
+            <br>
+            <button id="updateButton">Update Greeting</button>
+        </div>
+        
+        <div class="message">
+            Wishing you a day filled with happiness and a year filled with joy! 🎉
+        </div>
+    </div>
+    
+    <div class="emoji-container" id="emojiContainer"></div>
+    
+    <div class="signature">CodeWithChiran</div>
+
+    <script>
+        // DOM elements
+        const greetingElement = document.getElementById('greeting');
+        const nameInput = document.getElementById('nameInput');
+        const updateButton = document.getElementById('updateButton');
+        const emojiContainer = document.getElementById('emojiContainer');
+        
+        // Emojis for the effect
+        const emojis = ['🎉', '🎂', '✨', '🥳', '🎁', '🎈', '❤️', '🌟'];
+        
+        // Color-changing effect for the greeting
+        function changeColor() {
+            const colors = ['#ff8a00', '#e52e71', '#00b4ff', '#00ff88', '#ffd700', '#ff0080'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            greetingElement.style.color = randomColor;
+            greetingElement.style.textShadow = `0 0 15px ${randomColor}`;
+        }
+        
+        // Create floating emojis
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji');
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            // Random position and animation duration
+            const left = Math.random() * 100;
+            const duration = 3 + Math.random() * 4;
+            
+            emoji.style.left = `${left}%`;
+            emoji.style.animationDuration = `${duration}s`;
+            
+            emojiContainer.appendChild(emoji);
+            
+            // Remove emoji after animation completes
+            setTimeout(() => {
+                emoji.remove();
+            }, duration * 1000);
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random properties
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const size = 5 + Math.random() * 10;
+                const duration = 2 + Math.random() * 3;
+                const delay = Math.random() * 5;
+                
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}%`;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.animationDuration = `${duration}s`;
+                confetti.style.animationDelay = `${delay}s`;
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, (duration + delay) * 1000);
+            }
+        }
+        
+        // Update greeting with user input
+        function updateGreeting() {
+            const name = nameInput.value.trim() || 'Friend';
+            greetingElement.textContent = `Happy Birthday ${name}!`;
+            
+            // Trigger confetti effect
+            createConfetti();
+        }
+        
+        // Event listeners
+        updateButton.addEventListener('click', updateGreeting);
+        
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                updateGreeting();
+            }
+        });
+        
+        // Initialize effects
+        setInterval(changeColor, 2000);
+        setInterval(createEmoji, 500);
+        
+        // Initial confetti on page load
+        window.addEventListener('load', () => {
+            setTimeout(createConfetti, 500);
+        });
+    </script>
+</body>
+</html>
